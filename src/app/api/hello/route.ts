@@ -1,10 +1,11 @@
+import type { NextRequest } from "next/server";
+import { Ai } from "@cloudflare/ai";
 
-// Next.js Edge API Route Handlers: https://nextjs.org/docs/app/building-your-application/routing/router-handlers#edge-and-nodejs-runtimes
-
-import type { NextRequest } from 'next/server'
-
-export const runtime = 'edge'
+export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
-  return new Response(JSON.stringify({ name: 'John Doe' }))
+	const ai = new Ai(process.env.AI);
+	const messages = [{ role: "user", content: "hello world" }];
+	const result = await ai.run("@cf/meta/llama-2-7b-chat-fp16", { messages });
+	return new Response(JSON.stringify(result));
 }
